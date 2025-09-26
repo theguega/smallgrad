@@ -4,7 +4,7 @@ repos:
     rev: v0.6.9
     hooks:
       - id: ruff
-        args: [--fix]   # auto-fix lint issues
+        args: [--fix]
       - id: ruff-format
 
   # Generic pre-commit hooks
