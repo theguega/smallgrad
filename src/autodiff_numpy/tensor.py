@@ -67,7 +67,7 @@ class Tensor:
         return out
 
     def __pow__(self, other):
-        assert isinstance(other, (int, float)), "Only supporting power with scalar for now"
+        assert isinstance(other, (int, float))
         out = Tensor(self.data**other, (self,), f"**{other}")
 
         def _backward():
