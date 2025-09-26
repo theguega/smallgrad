@@ -27,7 +27,7 @@ class Tensor:
             grad_for_self = out.gradient
             if self.gradient.shape != grad_for_self.shape:
                 # sum of gradient if broadcasting occurred
-                self.gradient += np.sum(grad_for_self, axis=0, keepdims=self.gradient.ndim > 1)
+                self.gradient += np.sum(grad_for_self)
             else:
                 self.gradient += grad_for_self
 
@@ -35,7 +35,7 @@ class Tensor:
             grad_for_other = out.gradient
             if other.gradient.shape != grad_for_other.shape:
                 # sum gradient if broadcasting occurred
-                other.gradient += np.sum(grad_for_other, axis=0, keepdims=other.gradient.ndim > 1)
+                other.gradient += np.sum(grad_for_other)
             else:
                 other.gradient += grad_for_other
 
