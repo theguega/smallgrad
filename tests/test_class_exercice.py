@@ -15,15 +15,14 @@ def test_week4_tutorial():
     # --------------------------------------------------------------------
     # 1. ARRANGE: Set up the network parameters from the PDF
     # --------------------------------------------------------------------
-    w1_1 = Tensor(1.0, label="w1_1")
-    w2_1 = Tensor(0.8, label="w2_1")
-    w2_2 = Tensor(-0.6, label="w2_2")
-    w3_1 = Tensor(0.5, label="w3_1")
-    w3_2 = Tensor(0.5, label="w3_2")
-    b2 = Tensor(-0.5, label="b2")
-    x = Tensor(-1.0, label="x")
-    y = Tensor(0.5, label="y")
-    learning_rate = 0.1
+    w1_1 = Tensor(1.0)
+    w2_1 = Tensor(0.8)
+    w2_2 = Tensor(-0.6)
+    w3_1 = Tensor(0.5)
+    w3_2 = Tensor(0.5)
+    b2 = Tensor(-0.5)
+    x = Tensor(-1.0)
+    y = Tensor(0.5)
 
     # --------------------------------------------------------------------
     # 2. ACT: Perform the forward pass, exactly as in the PDF
@@ -61,6 +60,7 @@ def test_week4_tutorial():
     # --------------------------------------------------------------------
     # 6. ACT: Perform the weight update step
     # --------------------------------------------------------------------
+    learning_rate = 0.1
     new_w1_1 = w1_1.data - learning_rate * w1_1.gradient
     # new_w2_1 = w2_1.data - learning_rate * w2_1.gradient
     new_w2_2 = w2_2.data - learning_rate * w2_2.gradient

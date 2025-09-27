@@ -154,3 +154,5 @@ The unit tests were written with the help of **Google Gemini 2.5 Pro**
 > OpenAI. (2025). *ChatGPT* [Large language model]. Retrieved from [https://chat.openai.com](https://chat.openai.com)
 
 > Google. (2025). *Gemini 2.5 Pro* [Large language model]. Retrieved from [https://aistudio.google.com](https://aistudio.google.com)
+
+> Karpathy, A. (2020). *micrograd* [Autodiff engine]. Retrieved from [https://github.com/karpathy/micrograd/tree/master](https://github.com/karpathy/micrograd/tree/master)

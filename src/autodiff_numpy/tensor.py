@@ -7,106 +7,165 @@ class Tensor:
     It holds data, gradient, and tracks the operation that created it.
     """
 
-    def __init__(self, data, _children=(), _op="", label=""):
-        self.data = np.asarray(data, dtype=np.float32)
+    def __init__(self, data, _children=(), _op=""):
+        self.data = np.asarray(data)
         self.gradient = np.zeros_like(self.data)
         self._backward = lambda: None
         self._previous_nodes = set(_children)
         self._op = _op
-        self.label = label
 
     def __repr__(self):
-        return f"Tensor(data={self.data.shape}, grad={self.gradient.shape})"
+        return f"Tensor(data={self.data.shape}, grad={self.gradient.shape}, op={self._op})"
 
-    def __add__(self, other):
-        other = other if isinstance(other, Tensor) else Tensor(other)
-        out = Tensor(self.data + other.data, (self, other), "+")
-
-        def _backward():
-            # self.grad
-            grad_for_self = out.gradient
-            if self.gradient.shape != grad_for_self.shape:
-                # sum of gradient if broadcasting occurred
-                self.gradient += np.sum(grad_for_self)
-            else:
-                self.gradient += grad_for_self
-
-            # other.grad
-            grad_for_other = out.gradient
-            if other.gradient.shape != grad_for_other.shape:
-                # sum gradient if broadcasting occurred
-                other.gradient += np.sum(grad_for_other)
-            else:
-                other.gradient += grad_for_other
-
-        out._backward = _backward
-        return out
-
-    def __mul__(self, other):
-        other = other if isinstance(other, Tensor) else Tensor(other)
-        out = Tensor(self.data * other.data, (self, other), "*")
+    def __add__(self, b):
+        """
+        self : tensor a
+        input : tensor b
+        return : c = a + b
+        """
+        b = b if isinstance(b, Tensor) else Tensor(b)
+        c = Tensor(self.data + b.data, (self, b))
 
         def _backward():
-            # self.grad
-            grad_for_self = other.data * out.gradient
-            if self.gradient.shape != grad_for_self.shape:
-                # sum the incoming gradient to match the operand's shape
-                self.gradient += np.sum(grad_for_self)
+            """
+            a_grad = c_grad * 1
+            b_grad = c_grad * 1
+            """
+            a_grad = c.gradient
+            b_grad = c.gradient
+
+            if self.gradient.shape != a_grad.shape:
+                self.gradient += np.sum(a_grad)
             else:
-                self.gradient += grad_for_self
+                self.gradient = self.gradient + a_grad
 
-            # other.grad
-            grad_for_other = self.data * out.gradient
-            if other.gradient.shape != grad_for_other.shape:
-                # sum the incoming gradient to match the operand's shape
-                other.gradient += np.sum(grad_for_other)
+            if b.gradient.shape != b_grad.shape:
+                b.gradient = b.gradient + np.sum(b_grad)
             else:
-                other.gradient += grad_for_other
+                b.gradient = b.gradient + b_grad
 
-        out._backward = _backward
-        return out
+        c._backward = _backward
+        return c
 
-    def __pow__(self, other):
-        assert isinstance(other, (int, float))
-        out = Tensor(self.data**other, (self,), f"**{other}")
+    def __mul__(self, b):
+        """
+        self : tensor a
+        input : tensor b
+        return : c = a * b
+        """
+        b = b if isinstance(b, Tensor) else Tensor(b)
+        c = Tensor(self.data * b.data, (self, b))
 
         def _backward():
-            self.gradient += (other * self.data ** (other - 1)) * out.gradient
+            """
+            a_grad = c_grad * b
+            b_grad = c_grad * a
+            """
+            a_grad = b.data * c.gradient
+            b_grad = self.data * c.gradient
 
-        out._backward = _backward
-        return out
+            if self.gradient.shape != a_grad.shape:
+                self.gradient = self.gradient + np.sum(a_grad)
+            else:
+                self.gradient += a_grad
 
-    def __matmul__(self, other):
-        other = other if isinstance(other, Tensor) else Tensor(other)
-        out = Tensor(self.data @ other.data, (self, other), "@")
+            if b.gradient.shape != b_grad.shape:
+                b.gradient = b.gradient + np.sum(b_grad)
+            else:
+                b.gradient = b.gradient + b_grad
+
+        c._backward = _backward
+        return c
+
+    def __pow__(self, n):
+        """
+        self : tensor a
+        input : int n (only integer and float are supported)
+        return : c = a ^ n
+        """
+        assert isinstance(n, (int, float))
+        c = Tensor(self.data**n, (self,))
 
         def _backward():
-            self.gradient += out.gradient @ other.data.T
-            other.gradient += self.data.T @ out.gradient
+            """
+            a_grad = c_grad * n * (a ** (n - 1))
+            """
+            self.gradient = self.gradient + (n * self.data ** (n - 1)) * c.gradient
 
-        out._backward = _backward
-        return out
+        c._backward = _backward
+        return c
+
+    def __matmul__(self, b):
+        """
+        self : tensor a
+        input : tensor b
+        return : c = a @ b
+        """
+        b = b if isinstance(b, Tensor) else Tensor(b)
+        c = Tensor(self.data @ b.data, (self, b))
+
+        def _backward():
+            """
+            a_grad = c_grad @ b.T
+            b_grad = a.T @ c_grad
+            """
+            self.gradient = self.gradient + c.gradient @ b.data.T
+            b.gradient = b.gradient + self.data.T @ c.gradient
+
+        c._backward = _backward
+        return c
 
     def relu(self):
-        out = Tensor(np.maximum(0, self.data), (self,), "ReLU")
+        """
+        self : tensor a
+        return : c = a if a > 0 else 0
+        """
+        c = Tensor(np.maximum(0, self.data), (self,))
 
         def _backward():
-            self.gradient += (out.data > 0) * out.gradient
+            """
+            a_grad = c_grad * 1 if a > 0 else 0
+            """
+            a_grad = c.gradient * (self.data > 0)
+            self.gradient = self.gradient + a_grad
 
-        out._backward = _backward
-        return out
+        c._backward = _backward
+        return c
 
     def sigmoid(self):
-        out = Tensor(1 / (1 + np.exp(-self.data)), (self,), "sigmoid")
+        """
+        input : tensor a
+        return : c = 1 / (1 + exp(-a))
+        """
+        c = Tensor(1 / (1 + np.exp(-self.data)), (self,))
 
         def _backward():
-            self.gradient *= out.data * (1 - out.data)
+            """
+            a_grad = c_grad * c * (1 - c)
+            """
+            a_grad = c.gradient * c.data * (1 - c.data)
+            self.gradient = self.gradient * a_grad
 
-        out._backward = _backward
-        return out
+        c._backward = _backward
+        return c
+
+    def sum(self):
+        """
+        input : tensor a
+        return : c = sum(a)
+        """
+        c = Tensor(np.sum(self.data), (self,))
+
+        def _backward():
+            """
+            a_grad = c_grad * 1
+            """
+            self.gradient += np.ones_like(self.data) * c.gradient
+
+        c._backward = _backward
+        return c
 
     def backward(self):
-        # recursive topological sort of the graph
         topo = []
         visited = set()
 
@@ -119,19 +178,16 @@ class Tensor:
 
         build_topo(self)
 
-        # apply the chain rule to get its gradient (from the last node of the graph to the first)
+        # reset gradients before backprop
+        for v in topo:
+            v.gradient = np.zeros_like(v.data)
+
+        # seed gradient
         self.gradient = np.ones_like(self.data)
+
+        # backprop in topological order
         for v in reversed(topo):
             v._backward()
-
-    def sum(self):
-        out = Tensor(np.sum(self.data), (self,), "sum")
-
-        def _backward():
-            self.gradient += np.ones_like(self.data) * out.gradient
-
-        out._backward = _backward
-        return out
 
     def __radd__(self, other):
         return self + other

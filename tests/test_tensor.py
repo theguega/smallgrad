@@ -34,8 +34,8 @@ def test_relu_forward():
 
 
 def test_add_backward():
-    t1 = Tensor([1, 2, 3], label="t1")
-    t2 = Tensor([4, 5, 6], label="t2")
+    t1 = Tensor([1, 2, 3])
+    t2 = Tensor([4, 5, 6])
     result = t1 + t2
     result.gradient = np.array([1, 1, 1])
     result._backward()
@@ -84,10 +84,10 @@ def test_matmul_backward():
 
 def test_complex_graph_backward():
     """Tests a more complex graph with chain rule."""
-    a = Tensor(2.0, label="a")
-    b = Tensor(3.0, label="b")
+    a = Tensor(2.0)
+    b = Tensor(3.0)
     c = a * b  # c = 6
-    d = Tensor(4.0, label="d")
+    d = Tensor(4.0)
     e = c + d  # e = 10
     f = e.relu()  # f = 10
 
