@@ -148,8 +148,9 @@ The script generates a loss curve:
 
 ## ✍️ Credits
 
-This README was written and polished with the help of **ChatGPT**
-The unit tests were written with the help of **Google Gemini 2.5 Pro**
+This README was written and polished with the help of **ChatGPT**  
+The unit tests were written with the help of **Google Gemini 2.5 Pro**  
+Implementation inspired by **micrograd**
 
 > OpenAI. (2025). *ChatGPT* [Large language model]. Retrieved from [https://chat.openai.com](https://chat.openai.com)
 
