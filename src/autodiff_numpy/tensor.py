@@ -144,7 +144,7 @@ class Tensor:
             a_grad = c_grad * c * (1 - c)
             """
             a_grad = c.gradient * c.data * (1 - c.data)
-            self.gradient = self.gradient * a_grad
+            self.gradient = self.gradient + a_grad
 
         c._backward = _backward
         return c

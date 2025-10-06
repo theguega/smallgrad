@@ -18,10 +18,12 @@ class Linear(Module):
     """A fully-connected linear layer."""
 
     def __init__(self, in_features, out_features):
-        self.weight = Tensor(
-            np.random.randn(in_features, out_features) * np.sqrt(2.0 / in_features)
-        )
-        self.bias = Tensor(np.zeros((1, out_features)))
+        # Kaiming Initialization
+        weight_data = np.random.randn(in_features, out_features) * np.sqrt(2.0 / in_features)
+        bias_data = np.zeros((1, out_features))
+
+        self.weight = Tensor(weight_data)
+        self.bias = Tensor(bias_data)
 
     def __call__(self, x):
         self.out = x @ self.weight + self.bias

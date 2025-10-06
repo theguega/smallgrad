@@ -57,7 +57,7 @@ print()
 
 print("2. train the network for five epochs with learning rate of 0.01")
 learning_rate = 0.01
-epochs = 5
+epochs = 100
 num_samples = inputs.data.shape[0]
 losses = []
 
@@ -91,7 +91,7 @@ for epoch in range(epochs + 1):
         mean_gradient = p.gradient / num_samples
         p.data -= learning_rate * mean_gradient
 
-EXPORT_GRAPH_PATH = "report/figures/assignment_1.png"
+EXPORT_GRAPH_PATH = "scripts/assignment_1.png"
 plt.figure(figsize=(10, 6))
 plt.plot(range(epochs + 1), losses, marker="o")
 plt.title("Training Curve: Average Loss vs. Epoch")
