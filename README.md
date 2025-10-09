@@ -18,7 +18,7 @@ The repository is organized into three parts: **source code**, **scripts**, and 
 ```
 .
 ├── scripts/
-│   └── assignment.py             # Main script to run the assignment
+│   └── assignment_1.py             # Main script to run the assignment
 ├── src/
 │   └── autodiff_numpy/
 │       ├── __init__.py
@@ -56,7 +56,7 @@ This will:
 
 1. Print initial gradients to the console.
 2. Train the network for **5 epochs**, logging the average loss at each step.
-3. Save a training curve plot as `report/figures/assignment_1.png`.
+3. Save a training curve plot as `scripts/assignment_1.png`.
 
 ### 3. Run Tests
 
@@ -142,7 +142,7 @@ Epoch 5: Average Loss = 0.5236
 
 The script generates a loss curve:
 
-![Training Curve](report/figures/training_curve.png)
+![Training Curve](scripts/assignment_1.png)
 
 ---
 
