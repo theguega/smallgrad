@@ -1,0 +1,5 @@
+minigrad:
+  type: repository
+  author: kennysong
+  title: MiniGrad
+  url: https://github.com/kennysong/minigrad
