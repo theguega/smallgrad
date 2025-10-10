@@ -22,13 +22,13 @@
 #set par(
   justify: true,
 )
-= DESIGN OVERVIEW
+= Design Overview
 
 The goal of this assignment was to develop an autodifferentiation package based on NumPy. Inspired by MiniGrad, the package has two main modules: the tensor module and the neural network module @minigrad. The tensor module creates the individual nodes, which allow the neural network module to connect these nodes, creating the full network.
 
 == Tensor Module
 
-The tensor module, implemented in `tensor.py`, was inspired by the Tensor datatype in PyTorch. The `Tensor` class takes in a NumPy array as an argument and initializes attributes for the associated gradient, the child nodes that it was created by, and a backward function depending on the operation that created it. The `_backward` function defines how the gradient is passed back to child nodes of the tensor during backpropagation. Before backpropagation, all gradients are reset to zero to ensure proper accumulation of the gradients. Backpropagation is performed by creating a topological order of all the tensors and visiting them recursively in inverted order. This method allows the use of the chain rule efficiently by propagating the gradient through the network.
+The tensor module, implemented in `tensor.py`, was inspired by the Tensor datatype in PyTorch. The `Tensor` class takes in a NumPy array as an argument and initializes attributes for the associated gradient, the child nodes that it was created by, and a backward function depending on the operation that created it. The `_backward` function defines how the gradient is passed back to child nodes of the tensor during backpropagation. This method allows the use of the chain rule efficiently by propagating the gradient through the network. Before backpropagation, all gradients are reset to zero to ensure proper accumulation of the gradients. Backpropagation is performed by creating a topological order of all the tensors and visiting them recursively in inverted order.
 
 For example, if `c = a + b` and `d = ReLU(c)`, reversing the topology will result in an order of `d, c, b, a`.
 
@@ -36,7 +36,7 @@ The tensor class has functions to override the built-in operations for addition,
 
 The tensor class also defines two non-linear activation functions: ReLU and Sigmoid, and their derivatives.
 
-Here is a sample of the ReLU gradient calculation:
+Here is a sample of the ReLU gradient calculation used in its `_backward` function:
 
 ```python
 a_grad = c.gradient * (self.data > 0)  # compute derivative with respect to self (a)
@@ -65,7 +65,7 @@ The `ReLU` and `Sigmoid` classes override the `__call__` function to call the te
 
 The `Sequential` module allows multiple layers to be stacked and takes in a tuple of desired layers. The `__call__` function loops through the tuple of objects and feeds each module with the output of the previous one.
 
-== Assignment Task Script (Model Training)
+= Assignment Task Script (Model Training)
 
 The script begins by importing our package, datasets, and pickle data file to set the weights, biases, inputs, and target values. The model is built using a fully connected feed-forward neural network made with the Sequential module as follows:
 
@@ -91,7 +91,7 @@ Afterward, the model's gradients are set to zero (`model.zero_grad()`) before a 
 p.data -= learning_rate * mean_gradient
 ```
 
-== Results
+= Results
 
 #figure(
 image("fig2.png", width: 70%), caption: [First-layer weights and biases of the untrained network for the first (input, target) pair in the training dataset]
