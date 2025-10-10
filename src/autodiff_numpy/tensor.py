@@ -35,12 +35,14 @@ class Tensor:
             b_grad = c.gradient
 
             if self.gradient.shape != a_grad.shape:
-                self.gradient += np.sum(a_grad)
+                keepdims = len(self.gradient.shape) == len(a_grad.shape)
+                self.gradient += np.sum(a_grad, axis=0, keepdims=keepdims)
             else:
                 self.gradient = self.gradient + a_grad
 
             if b.gradient.shape != b_grad.shape:
-                b.gradient = b.gradient + np.sum(b_grad)
+                keepdims = len(b.gradient.shape) == len(b_grad.shape)
+                b.gradient = b.gradient + np.sum(b_grad, axis=0, keepdims=keepdims)
             else:
                 b.gradient = b.gradient + b_grad
 
@@ -65,12 +67,14 @@ class Tensor:
             b_grad = self.data * c.gradient
 
             if self.gradient.shape != a_grad.shape:
-                self.gradient = self.gradient + np.sum(a_grad)
+                keepdims = len(self.gradient.shape) == len(a_grad.shape)
+                self.gradient = self.gradient + np.sum(a_grad, axis=0, keepdims=keepdims)
             else:
                 self.gradient += a_grad
 
             if b.gradient.shape != b_grad.shape:
-                b.gradient = b.gradient + np.sum(b_grad)
+                keepdims = len(b.gradient.shape) == len(b_grad.shape)
+                b.gradient = b.gradient + np.sum(b_grad, axis=0, keepdims=keepdims)
             else:
                 b.gradient = b.gradient + b_grad
 

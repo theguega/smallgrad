@@ -25,9 +25,9 @@ inputs = Tensor(data["inputs"])
 targets_data = np.array(data["targets"]).reshape(-1, 1)
 targets = Tensor(targets_data)
 
-print(f"loaded data with {inputs.data.shape[0]} samples")
-print(f"input shape: {inputs.data.shape}")
-print(f"target shape: {targets.data.shape}")
+print(f"Loaded data with {inputs.data.shape[0]} samples")
+print(f"Input shape: {inputs.data.shape}")
+print(f"Target shape: {targets.data.shape}")
 
 # build the neural network: 2 inputs -> 10 hidden -> 10 hidden -> 1 output
 # architecture: linear -> relu -> linear -> relu -> linear
@@ -42,21 +42,21 @@ model.layers[2].bias = b2
 model.layers[4].weight = w3  # third linear layer
 model.layers[4].bias = b3
 
-print("1. gradients of the first-layer weights and biases of the untrained network")
+print("1. Gradients of the first-layer weights and biases of the untrained network")
 
 # take just the first sample to compute gradients
 first_input = Tensor(inputs.data[0:1])
 first_target = Tensor(targets.data[0:1])
 
-print(f"using first sample: input = {first_input.data}, target = {first_target.data}")
+print(f"Using first sample: input = {first_input.data}, target = {first_target.data}")
 
 # forward pass: compute prediction
 y_hat = model(first_input)
-print(f"model prediction: {y_hat.data}")
+print(f"Model prediction: {y_hat.data}")
 
 # compute loss using mean squared error formula: 0.5 * (y_hat - y)^2
 loss = ((y_hat - first_target) ** 2) * 0.5
-print(f"loss value: {loss.data}")
+print(f"Loss value: {loss.data}")
 
 # reset gradients to zero before backward pass
 model.zero_grad()
@@ -64,11 +64,11 @@ model.zero_grad()
 loss.backward()
 
 print(
-    "Gradients of the first-layer weights:\n",
-    model.layers[0].weight.gradient,
+    "\nGradients of the first-layer weights:\n",
+    model.layers[0].weight.gradient.T,
 )
 print(
-    "\nGradients of the first-layer biases :\n",
+    "\nGradients of the first-layer biases:\n",
     model.layers[0].bias.gradient,
 )
 
@@ -76,15 +76,15 @@ print()
 print("---")
 print()
 
-print("2. train the network for five epochs with learning rate of 0.01")
+print("2. Train the network for five epochs with learning rate of 0.01")
 learning_rate = 0.01
 epochs = 5
 num_samples = inputs.data.shape[0]
 losses = []
 
-print(f"starting training with {num_samples} samples")
-print(f"learning rate: {learning_rate}")
-print(f"number of epochs: {epochs}")
+print(f"Starting training with {num_samples} samples")
+print(f"Learning rate: {learning_rate}")
+print(f"Number of epochs: {epochs}")
 
 # training loop - each epoch processes all samples
 for epoch in range(epochs + 1):
@@ -122,23 +122,23 @@ for epoch in range(epochs + 1):
 
 # create and save training loss plot
 EXPORT_GRAPH_PATH = "scripts/assignment_1.png"
-print("creating training curve plot...")
+print("Creating training curve plot...")
 
 plt.figure(figsize=(10, 6))
 plt.plot(range(epochs + 1), losses, marker="o", markersize=3)
-plt.title("training curve: average loss vs. epoch")
-plt.xlabel("epoch")
-plt.ylabel("average loss")
+plt.title("Training Curve: Average Loss vs. Epoch")
+plt.xlabel("Epoch")
+plt.ylabel("Average loss")
 plt.grid(True, alpha=0.3)
 
 # save the plot
 plt.savefig(EXPORT_GRAPH_PATH, dpi=300, bbox_inches="tight")
-print(f"plot saved as {EXPORT_GRAPH_PATH}")
+print(f"Plot saved as {EXPORT_GRAPH_PATH}")
 
 # show final training results
-print("\ntraining completed!")
-print(f"initial loss: {losses[0]:.6f}")
-print(f"final loss: {losses[-1]:.6f}")
-print(f"loss reduction: {((losses[0] - losses[-1]) / losses[0] * 100):.2f}%")
+print("\nTraining completed!")
+print(f"Initial loss: {losses[0]:.6f}")
+print(f"Final loss: {losses[-1]:.6f}")
+print(f"Loss reduction: {((losses[0] - losses[-1]) / losses[0] * 100):.2f}%")
 
 plt.show()
