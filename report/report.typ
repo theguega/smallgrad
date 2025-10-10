@@ -17,6 +17,7 @@
 
 #pagebreak()
 
+#set text(size: 10pt)
 #set heading(numbering: "1.a)")
 #set par(
   justify: true,
@@ -45,10 +46,10 @@ self.gradient = self.gradient + a_grad  # accumulate the gradient
 #grid(
 columns: (1fr, 1fr),
 [
-To illustrate this class’s functionality, let's take the loss tensor as an example: $L = 1/2(hat(y) - y)^2$ with $hat(y) = (h^2_1w^3_1 + h^2_2w^3_2) + b^3_1$. In this example, $y$ and $hat(y)$ are declared as child nodes of the square tensor and are saved in the `_previous_nodes` attribute as a set. @fig1 illustrates the computational graph developed during forward propagation and backpropagation. As seen, every operation creates a new node. The "grad" column indicates the gradient value during the forward pass, and the column under it represents the "calculated gradient" (c.g.) or δ calculated during the backward pass by reversing the depicted connections. The green boxes in Fig. 1 indicate the resulting value the weight will be updated by, and the δ values computed by hand in class that are required for earlier nodes in the network are shown in red boxes.
+To illustrate this class’s functionality, take the loss tensor as an example: $L = 1/2(hat(y) - y)^2$ with $hat(y) = (h^2_1w^3_1 + h^2_2w^3_2) + b^3_1$. In this example, $y$ and $hat(y)$ are declared as child nodes of the square tensor and are saved in the `_previous_nodes` attribute as a set. @fig1 illustrates the computational graph developed during forward propagation and backpropagation. As seen, every operation creates a new node. The gradient value "grad" or δ is calculated during the backward pass by reversing the depicted connections. The green boxes in Fig. 1 indicate the resulting value the weight will be updated by, and the δ values computed by hand in class that are required for earlier nodes in the network are shown in red boxes.
 ],
 [
-#figure(image("fig1.png"), caption: [Computational graph of nodes]) <fig1>
+#figure(image("fig1.png", width: 75%), caption: [Computational graph of nodes]) <fig1>
 ]
 )
 
