@@ -94,7 +94,7 @@ p.data -= learning_rate * mean_gradient
 = Results
 
 #figure(
-image("fig2.png", width: 70%), caption: [First-layer weights and biases of the untrained network for the first (input, target) pair in the training dataset]
+image("fig2.png", width: 60%), caption: [First-layer weights and biases of the untrained network for the first (input, target) pair in the training dataset]
 ) <fig2>
 
 #figure(
